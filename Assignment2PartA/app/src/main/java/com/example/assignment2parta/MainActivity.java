@@ -1,4 +1,4 @@
-package com.example.recycleviewdemo;
+package com.example.assignment2parta;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+
 
 import java.util.ArrayList;
 

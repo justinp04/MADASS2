@@ -1,4 +1,4 @@
-package com.example.recycleviewdemo;
+package com.example.assignment2parta;
 
 public class MyData
 {

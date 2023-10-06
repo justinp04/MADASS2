@@ -1,4 +1,4 @@
-package com.example.recycleviewdemo;
+package com.example.assignment2parta;
 
 import android.util.Log;
 import android.view.LayoutInflater;
