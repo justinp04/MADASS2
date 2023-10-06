@@ -11,7 +11,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<ContactData> data;
-    public MainActivity(){
+    public MainActivity()
+    {
+        // Eventually have this be via a button onClick listener
         data = new ArrayList<ContactData>();
         data.add(new ContactData("AAAAA","0000000","place@holder.com",R.drawable.empty_view));
         data.add(new ContactData("BBBBB","000312321","place@holder.com",R.drawable.empty_view));
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,true));
         */
         /*Grid layout with two column*/
-        int spanCount = 4;
+        int spanCount = 1;
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, spanCount,
                 GridLayoutManager.VERTICAL, false);
         rv.setLayoutManager(gridLayoutManager);
