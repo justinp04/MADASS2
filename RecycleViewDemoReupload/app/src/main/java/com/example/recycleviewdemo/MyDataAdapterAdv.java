@@ -21,8 +21,7 @@ public class MyDataAdapterAdv extends RecyclerView.Adapter<MyDataVHAdv> {
     @Override
     public MyDataVHAdv onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.list_item_layout_adv,
-                parent,false);
+        View view = layoutInflater.inflate(R.layout.list_item_layout_adv, parent,false);
         MyDataVHAdv myDataVHolderAdv = new MyDataVHAdv(view,parent);
         return myDataVHolderAdv;
     }

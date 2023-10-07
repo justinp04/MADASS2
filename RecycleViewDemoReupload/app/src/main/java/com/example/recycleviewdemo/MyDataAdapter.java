@@ -19,7 +19,8 @@ public class MyDataAdapter extends RecyclerView.Adapter<MyDataVH> {
     }
     @NonNull
     @Override
-    public MyDataVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyDataVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+    {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.list_item_layout,parent,false);
         MyDataVH myDataVHolder = new MyDataVH(view);
@@ -27,7 +28,8 @@ public class MyDataAdapter extends RecyclerView.Adapter<MyDataVH> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyDataVH holder, int position) {
+    public void onBindViewHolder(@NonNull MyDataVH holder, int position)
+    {
         MyData singleData = data.get(position);
         holder.nameTextBox.setText(singleData.getName());
         holder.callButton.setOnClickListener(new View.OnClickListener() {
