@@ -11,26 +11,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class MyDataAdapter extends RecyclerView.Adapter<MyDataVH> {
+public class ContactAdapterAdv extends RecyclerView.Adapter<ContactVHAdv> {
 
-    ArrayList<MyData> data;
-    public MyDataAdapter(ArrayList<MyData> data){
+    ArrayList<Contact> data;
+    public ContactAdapterAdv(ArrayList<Contact> data){
         this.data = data;
     }
     @NonNull
     @Override
-    public MyDataVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
-    {
+    public ContactVHAdv onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.list_item_layout,parent,false);
-        MyDataVH myDataVHolder = new MyDataVH(view);
-        return myDataVHolder;
+        View view = layoutInflater.inflate(R.layout.list_item_layout_adv, parent,false);
+        ContactVHAdv myDataVHolderAdv = new ContactVHAdv(view,parent);
+        return myDataVHolderAdv;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyDataVH holder, int position)
-    {
-        MyData singleData = data.get(position);
+    public void onBindViewHolder(@NonNull ContactVHAdv holder, int position) {
+        Contact singleData = data.get(position);
         holder.nameTextBox.setText(singleData.getName());
         holder.callButton.setOnClickListener(new View.OnClickListener() {
             @Override

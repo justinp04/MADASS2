@@ -80,28 +80,28 @@ public class ContactListFragment extends Fragment
     {
         super.onViewCreated(view, savedInstanceState);
 
-        ArrayList<MyData> data = new ArrayList<MyData>();
+        ArrayList<Contact> data = new ArrayList<Contact>();
 
-        data.add(new MyData("AAAAA","0000000"));
-        data.add(new MyData("BBBBB","000312321"));
-        data.add(new MyData("CCCCC","054545454"));
-        data.add(new MyData("DDDDDD","000005"));
-        data.add(new MyData("EEEEEE","0000050"));
-        data.add(new MyData("FFFFFF","60000600"));
-        data.add(new MyData("GGGGGG","60000444"));
-        data.add(new MyData("HHHHHH","70003333"));
-        data.add(new MyData("IIIIII","90004444"));
-        data.add(new MyData("JJJJJJ","80077777"));
-        data.add(new MyData("KKKKKK","80444444"));
-        data.add(new MyData("LLLLLL","600054353"));
-        data.add(new MyData("MMMMMM","5000543545"));
-        data.add(new MyData("NNNNNN","3000543543"));
-        data.add(new MyData("OOOOOO","2000545435"));
-        data.add(new MyData("PPPPPP","1000666666"));
-        data.add(new MyData("QQQQQQ","343543"));
-        data.add(new MyData("QQQQQQ","343543"));
-        data.add(new MyData("RRRRRR","343543"));
-        data.add(new MyData("SSSSSS","343543"));
+        data.add(new Contact("AAAAA","0000000"));
+        data.add(new Contact("BBBBB","000312321"));
+        data.add(new Contact("CCCCC","054545454"));
+        data.add(new Contact("DDDDDD","000005"));
+        data.add(new Contact("EEEEEE","0000050"));
+        data.add(new Contact("FFFFFF","60000600"));
+        data.add(new Contact("GGGGGG","60000444"));
+        data.add(new Contact("HHHHHH","70003333"));
+        data.add(new Contact("IIIIII","90004444"));
+        data.add(new Contact("JJJJJJ","80077777"));
+        data.add(new Contact("KKKKKK","80444444"));
+        data.add(new Contact("LLLLLL","600054353"));
+        data.add(new Contact("MMMMMM","5000543545"));
+        data.add(new Contact("NNNNNN","3000543543"));
+        data.add(new Contact("OOOOOO","2000545435"));
+        data.add(new Contact("PPPPPP","1000666666"));
+        data.add(new Contact("QQQQQQ","343543"));
+        data.add(new Contact("QQQQQQ","343543"));
+        data.add(new Contact("RRRRRR","343543"));
+        data.add(new Contact("SSSSSS","343543"));
 
         Log.d("IMPORT", "All data values have been added");
 
@@ -111,10 +111,10 @@ public class ContactListFragment extends Fragment
         // Set the layout manager
         rv.setLayoutManager(new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false));
 
-        MyDataAdapter adapter = new MyDataAdapter(data);
+        ContactAdapter adapter = new ContactAdapter(data);
 
         /*this is the advanced adapter*/
-        // MyDataAdapterAdv adapter = new MyDataAdapterAdv(data);
+        // ContactAdapterAdv adapter = new ContactAdapterAdv(data);
         rv.setAdapter(adapter);
     }
 }
