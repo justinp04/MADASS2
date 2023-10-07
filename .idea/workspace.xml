@@ -5,7 +5,79 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4ad99057-0c91-45d9-85a9-314f408382a7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/.idea/deploymentTargetDropDown.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/.idea/deploymentTargetDropDown.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/app/src/androidTest/java/com/example/assignment2parta/ExampleInstrumentedTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/app/src/androidTest/java/com/example/recycleviewdemo/ExampleInstrumentedTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/app/src/main/java/com/example/assignment2parta/ContactData.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/app/src/main/java/com/example/assignment2parta/ContactDataAdapter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/app/src/main/java/com/example/assignment2parta/ContactDataVH.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/app/src/main/java/com/example/assignment2parta/ContactListView.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/app/src/main/java/com/example/assignment2parta/MainActivity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/app/src/main/res/drawable/empty_view.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/app/src/main/res/layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/app/src/main/res/layout/fragment_contact_list_view.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/app/src/main/res/values-night/themes.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/app/src/main/res/values-night/themes.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/app/src/main/res/values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/app/src/main/res/values/themes.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/app/src/main/res/values/themes.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/app/src/test/java/com/example/assignment2parta/ExampleUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/app/src/test/java/com/example/recycleviewdemo/ExampleUnitTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment2PartA/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/.idea/.name" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/.idea/deploymentTargetDropDown.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/proguard-rules.pro" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/androidTest/java/com/example/recycleviewdemo/ExampleInstrumentedTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/AndroidManifest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/java/com/example/recycleviewdemo/ContactListFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/app/src/main/java/com/example/recycleviewdemo/ContactListFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/java/com/example/recycleviewdemo/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/app/src/main/java/com/example/recycleviewdemo/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/java/com/example/recycleviewdemo/MyData.java" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/app/src/main/java/com/example/recycleviewdemo/MyData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/java/com/example/recycleviewdemo/MyDataAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/app/src/main/java/com/example/recycleviewdemo/MyDataAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/java/com/example/recycleviewdemo/MyDataAdapterAdv.java" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/app/src/main/java/com/example/recycleviewdemo/MyDataAdapterAdv.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/java/com/example/recycleviewdemo/MyDataVH.java" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/app/src/main/java/com/example/recycleviewdemo/MyDataVH.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/java/com/example/recycleviewdemo/MyDataVHAdv.java" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/app/src/main/java/com/example/recycleviewdemo/MyDataVHAdv.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/drawable/ic_launcher_background.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/layout/activity_main.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/layout/fragment_contact_list_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment2PartA/app/src/main/res/layout/fragment_contact_list_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/layout/list_item_layout.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/layout/list_item_layout_adv.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/mipmap-hdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/mipmap-mdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/mipmap-xhdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/values-night/themes.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/values/colors.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/values/strings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/values/themes.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/xml/backup_rules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/main/res/xml/data_extraction_rules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/app/src/test/java/com/example/recycleviewdemo/ExampleUnitTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/gradle.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RecycleViewDemoReupload/settings.gradle" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +101,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
     "cidr.known.project.marker": "true",
-    "last_opened_file_path": "C:/Users/Jah/OneDrive/Documents/GitHub/MADASS2/RecycleViewDemoReupload"
+    "last_opened_file_path": "C:/Users/Jah/OneDrive/Documents/GitHub/MADASS2/Assignment2PartA"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
