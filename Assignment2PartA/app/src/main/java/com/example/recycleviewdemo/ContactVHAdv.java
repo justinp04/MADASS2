@@ -11,7 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ContactVHAdv extends RecyclerView.ViewHolder{
     public TextView nameTextBox;
     public Button callButton;
-    public ContactVHAdv(@NonNull View itemView, ViewGroup parent) {
+    public ContactVHAdv(@NonNull View itemView, ViewGroup parent)
+    {
         super(itemView);
         int hSize = parent.getMeasuredHeight() /3;
         //int wSize = parent.getMeasuredWidth()/2;
