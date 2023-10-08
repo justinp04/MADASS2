@@ -44,10 +44,10 @@ public class ContactListFragment extends Fragment
                 if(result.getResultCode() == RESULT_OK)
                 {
                     Intent data = result.getData();
-                    processPickContactResult(data);
+//                    processPickContactResult(data);
                 }
             }
-    )
+    );
 
     public ContactListFragment() {
         // Required empty public constructor
