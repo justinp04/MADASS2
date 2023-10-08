@@ -8,6 +8,10 @@ public class MainActivityData extends ViewModel
 {
     public MutableLiveData<Integer> clickedValue;
 
+    // We need a boolean value to see if we are adding a new contact or modifying an existing contact
+    public boolean modify;
+    public int position;
+
     // Constants to refer to
     int CONTACT_LIST = 0;
     int CONTACT_CARD = 1;
@@ -16,6 +20,8 @@ public class MainActivityData extends ViewModel
     {
         clickedValue = new MediatorLiveData<Integer>();
         clickedValue.setValue(CONTACT_LIST);
+        position = 0;
+        modify = false;
     }
 
     // Accessors

@@ -2,8 +2,12 @@ package com.example.recycleviewdemo;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.Character.*;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,6 +73,14 @@ public class ContactCardFragment extends Fragment{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_contact_card, container, false);
 
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+
         EditText name = view.findViewById(R.id.name);
         EditText number = view.findViewById(R.id.phoneNumber);
         EditText email = view.findViewById(R.id.email);
@@ -82,6 +95,23 @@ public class ContactCardFragment extends Fragment{
 
         ContactDAO contactDAO = ContactDBInstance.getDatabase(getContext().getApplicationContext()).contactDAO();
 
+        // If we are modifying a contact instead of adding new data
+        if(mainActivityData.modify)
+        {
+            // Retrieve the correct contact data
+            List<Contact> list = contactDAO.getAllContacts();
+            Contact temp = list.get(mainActivityData.position);
+
+            // Set the values to what should already exist
+            name.setText(temp.getName());
+            number.setText(temp.getPhoneNumber());
+            email.setText(temp.getEmail());
+
+            mainActivityData.modify = false;
+
+            Log.d("EXISTS","The contact exists" + temp.getName());
+        }
+
         back.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -94,6 +124,7 @@ public class ContactCardFragment extends Fragment{
 
                 // Will set the value so that it goes back to the contact list
                 mainActivityData.toContactList();
+                mainActivityData.modify = false;
             }
         });
 
@@ -120,11 +151,10 @@ public class ContactCardFragment extends Fragment{
                     email.setText("Email");
 
                     mainActivityData.toContactList();
+                    mainActivityData.modify = false;
                 }
             }
         });
-
-        return view;
     }
 
     // The following method will check if a given string contains letters or not
