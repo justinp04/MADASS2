@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -32,12 +35,28 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactVH> {
     {
         Contact singleData = data.get(position);
         holder.nameTextBox.setText(singleData.getName());
-        holder.callButton.setOnClickListener(new View.OnClickListener() {
+        holder.callButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View view) {
                 Toast.makeText(view.getContext(), "Calling "+ singleData.getPhoneNumber(),
                         Toast.LENGTH_SHORT).show();
                 Log.d("Values", singleData.getPhoneNumber());
+            }
+        });
+
+        holder.nameTextBox.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                MainActivityData mainActivityData = new ViewModelProvider((AppCompatActivity) view.getContext()).get(MainActivityData.class);
+
+                // We need the position to know where in the list of datat ot reference
+                mainActivityData.position = position;
+                mainActivityData.modify = true;
+
+                mainActivityData.toContactCard();
             }
         });
     }
