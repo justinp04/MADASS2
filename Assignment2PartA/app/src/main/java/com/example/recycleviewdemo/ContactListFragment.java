@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -52,10 +53,9 @@ public class ContactListFragment extends Fragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-
-        Log.d("CREATE VIEW ","View created for fragment");
 
         if (getArguments() != null)
         {
@@ -65,12 +65,23 @@ public class ContactListFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_contact_list_, container, false);
 
+        TextView add = view.findViewById(R.id.addContact);
 
+        ContactDAO contactDAO = ContactDBInstance.getDatabase(getContext().getApplicationContext()).contactDAO();
+
+        add.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                // Create a fragment to create the contact card fragment
+            }
+        });
 
         return view;
     }
@@ -80,30 +91,8 @@ public class ContactListFragment extends Fragment
     {
         super.onViewCreated(view, savedInstanceState);
 
-        ArrayList<MyData> data = new ArrayList<MyData>();
-
-        data.add(new MyData("AAAAA","0000000"));
-        data.add(new MyData("BBBBB","000312321"));
-        data.add(new MyData("CCCCC","054545454"));
-        data.add(new MyData("DDDDDD","000005"));
-        data.add(new MyData("EEEEEE","0000050"));
-        data.add(new MyData("FFFFFF","60000600"));
-        data.add(new MyData("GGGGGG","60000444"));
-        data.add(new MyData("HHHHHH","70003333"));
-        data.add(new MyData("IIIIII","90004444"));
-        data.add(new MyData("JJJJJJ","80077777"));
-        data.add(new MyData("KKKKKK","80444444"));
-        data.add(new MyData("LLLLLL","600054353"));
-        data.add(new MyData("MMMMMM","5000543545"));
-        data.add(new MyData("NNNNNN","3000543543"));
-        data.add(new MyData("OOOOOO","2000545435"));
-        data.add(new MyData("PPPPPP","1000666666"));
-        data.add(new MyData("QQQQQQ","343543"));
-        data.add(new MyData("QQQQQQ","343543"));
-        data.add(new MyData("RRRRRR","343543"));
-        data.add(new MyData("SSSSSS","343543"));
-
-        Log.d("IMPORT", "All data values have been added");
+        ContactDAO contactDAO = ContactDBInstance.getDatabase(getContext().getApplicationContext()).contactDAO();
+        ArrayList<Contact> data = new ArrayList<Contact>(contactDAO.getAllContacts());
 
         // Make a reference to the RecyclerView
         RecyclerView rv = view.findViewById(R.id.recView);
@@ -111,10 +100,10 @@ public class ContactListFragment extends Fragment
         // Set the layout manager
         rv.setLayoutManager(new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false));
 
-        MyDataAdapter adapter = new MyDataAdapter(data);
+        ContactAdapter adapter = new ContactAdapter(data);
 
         /*this is the advanced adapter*/
-        // MyDataAdapterAdv adapter = new MyDataAdapterAdv(data);
+        // ContactAdapterAdv adapter = new ContactAdapterAdv(data);
         rv.setAdapter(adapter);
     }
 }
