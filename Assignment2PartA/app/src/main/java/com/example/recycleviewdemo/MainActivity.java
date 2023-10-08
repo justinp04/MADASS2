@@ -22,11 +22,13 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Retrieve the DAO for ContactDAO
+        ContactDAO contactDAO = ContactDBInstance.getDatabase(getApplicationContext()).contactDAO();
+
         Fragment contactList = loadContactFragment();
-        Log.d("LOAD FRAGMENT", "Contact List Fragment is loaded");
     }
 
-    // The following method loads the ContactListFragmemt
+    // The following method loads the ContactListFragment
     private Fragment loadContactFragment()
     {
         // To load the fragment, we need to create a fragment manager to manage and load fragments
@@ -40,16 +42,12 @@ public class MainActivity extends AppCompatActivity
         {
             // There is no fragment, thus we need to add
             fm.beginTransaction().add(R.id.frameLayout, contactListFragment).commit();
-            Log.d("ADD FRAGMENT", "Contact List Fragment is added");
         }
         else
         {
             // There is a fragment so we must replace
             fm.beginTransaction().replace(R.id.frameLayout, contactListFragment).commit();
-            Log.d("REPLACE FRAGMENT", "Contact List Fragment is replaced");
         }
-
-        Log.d("FIN METHOD", "Contact List Fragment is loaded");
 
         return frag;
     }

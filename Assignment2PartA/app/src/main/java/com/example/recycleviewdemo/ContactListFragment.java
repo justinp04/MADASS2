@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -52,10 +53,9 @@ public class ContactListFragment extends Fragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
-
-        Log.d("CREATE VIEW ","View created for fragment");
 
         if (getArguments() != null)
         {
@@ -65,12 +65,23 @@ public class ContactListFragment extends Fragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_contact_list_, container, false);
 
+        TextView add = view.findViewById(R.id.addContact);
 
+        ContactDAO contactDAO = ContactDBInstance.getDatabase(getContext().getApplicationContext()).contactDAO();
+
+        add.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                // Create a fragment to create the contact card fragment
+            }
+        });
 
         return view;
     }
@@ -80,30 +91,8 @@ public class ContactListFragment extends Fragment
     {
         super.onViewCreated(view, savedInstanceState);
 
-        ArrayList<Contact> data = new ArrayList<Contact>();
-
-        data.add(new Contact("AAAAA","0000000"));
-        data.add(new Contact("BBBBB","000312321"));
-        data.add(new Contact("CCCCC","054545454"));
-        data.add(new Contact("DDDDDD","000005"));
-        data.add(new Contact("EEEEEE","0000050"));
-        data.add(new Contact("FFFFFF","60000600"));
-        data.add(new Contact("GGGGGG","60000444"));
-        data.add(new Contact("HHHHHH","70003333"));
-        data.add(new Contact("IIIIII","90004444"));
-        data.add(new Contact("JJJJJJ","80077777"));
-        data.add(new Contact("KKKKKK","80444444"));
-        data.add(new Contact("LLLLLL","600054353"));
-        data.add(new Contact("MMMMMM","5000543545"));
-        data.add(new Contact("NNNNNN","3000543543"));
-        data.add(new Contact("OOOOOO","2000545435"));
-        data.add(new Contact("PPPPPP","1000666666"));
-        data.add(new Contact("QQQQQQ","343543"));
-        data.add(new Contact("QQQQQQ","343543"));
-        data.add(new Contact("RRRRRR","343543"));
-        data.add(new Contact("SSSSSS","343543"));
-
-        Log.d("IMPORT", "All data values have been added");
+        ContactDAO contactDAO = ContactDBInstance.getDatabase(getContext().getApplicationContext()).contactDAO();
+        ArrayList<Contact> data = new ArrayList<Contact>(contactDAO.getAllContacts());
 
         // Make a reference to the RecyclerView
         RecyclerView rv = view.findViewById(R.id.recView);
