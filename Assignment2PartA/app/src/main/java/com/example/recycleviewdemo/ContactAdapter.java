@@ -32,12 +32,22 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactVH> {
     {
         Contact singleData = data.get(position);
         holder.nameTextBox.setText(singleData.getName());
-        holder.callButton.setOnClickListener(new View.OnClickListener() {
+        holder.callButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View view) {
                 Toast.makeText(view.getContext(), "Calling "+ singleData.getPhoneNumber(),
                         Toast.LENGTH_SHORT).show();
                 Log.d("Values", singleData.getPhoneNumber());
+            }
+        });
+
+        holder.nameTextBox.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+
             }
         });
     }

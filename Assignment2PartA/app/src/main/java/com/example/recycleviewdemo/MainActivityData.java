@@ -15,7 +15,7 @@ public class MainActivityData extends ViewModel
     public MainActivityData()
     {
         clickedValue = new MediatorLiveData<Integer>();
-        clickedValue.setValue(CONTACT_CARD);
+        clickedValue.setValue(CONTACT_LIST);
     }
 
     // Accessors

@@ -2,14 +2,17 @@ package com.example.recycleviewdemo;
 
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.lang.Character.*;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,21 +68,78 @@ public class ContactCardFragment extends Fragment{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_contact_card, container, false);
 
+        EditText name = view.findViewById(R.id.name);
+        EditText number = view.findViewById(R.id.phoneNumber);
+        EditText email = view.findViewById(R.id.email);
+
+        ImageView picture;
+
         TextView back = view.findViewById(R.id.backButton);
+        TextView save = view.findViewById(R.id.addContact);
 
         MainActivityData mainActivityData = new ViewModelProvider(getActivity()).get(MainActivityData.class);
         // getActivity() retrieves the activity the fragment is associated with, hence it will be the same as MainActivity.
+
+        ContactDAO contactDAO = ContactDBInstance.getDatabase(getContext().getApplicationContext()).contactDAO();
 
         back.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
+                // Reset the values of the EditText views
+                name.setText("Name");
+                number.setText("Mobile Number");
+                email.setText("Email");
+
                 // Will set the value so that it goes back to the contact list
                 mainActivityData.toContactList();
             }
         });
 
+        save.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                // Check if values are null or not
+                if(name.getText() == null || number.getText() == null){}
+                else if(!isNumber(number.getText().toString()))
+                {
+                    Toast toast = Toast.makeText(getContext(), "Mobile Number invalid", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                else
+                {
+                    Contact newContact = new Contact(name.getText().toString(), number.getText().toString(), email.getText().toString());
+                    contactDAO.insert(newContact);
+
+                    // Reset the values of the EditText views
+                    name.setText("Name");
+                    number.setText("Mobile Number");
+                    email.setText("Email");
+
+                    mainActivityData.toContactList();
+                }
+            }
+        });
+
         return view;
+    }
+
+    // The following method will check if a given string contains letters or not
+    private boolean isNumber(String string)
+    {
+        boolean isNumber = true;
+        try
+        {
+            int number = Integer.parseInt(string);
+        }
+        catch(NumberFormatException exception)
+        {
+            isNumber = false;
+        }
+
+        return isNumber;
     }
 }

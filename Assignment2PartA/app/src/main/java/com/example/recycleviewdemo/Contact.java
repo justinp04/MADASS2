@@ -9,20 +9,33 @@ import androidx.room.PrimaryKey;
 public class Contact
 {
     @ColumnInfo(name = "contact_name")
+    @NonNull
     private String name;
 
     @PrimaryKey
     @NonNull
     private String phoneNumber;
-    public Contact(String name, String phoneNumber)
+
+    private String email;
+    public Contact(String name, String phoneNumber, String email)
     {
         this.name = name;
         this.phoneNumber = phoneNumber;
+        this.email = email;
     }
 
     public String getPhoneNumber()
     {
         return phoneNumber;
+    }
+    public String getName()
+    {
+        return name;
+    }
+
+    public String getEmail()
+    {
+        return email;
     }
 
     public void setPhoneNumber(String phoneNumber)
@@ -30,13 +43,14 @@ public class Contact
         this.phoneNumber = phoneNumber;
     }
 
-    public String getName()
-    {
-        return name;
-    }
 
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    public void setEmail(String email)
+    {
+        this.email = email;
     }
 }
