@@ -1,19 +1,22 @@
 package com.example.recycleviewdemo;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ContactCardFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ContactCardFragment extends Fragment {
+public class ContactCardFragment extends Fragment{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -47,7 +50,8 @@ public class ContactCardFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -56,9 +60,26 @@ public class ContactCardFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_contact_card, container, false);
+        View view = inflater.inflate(R.layout.fragment_contact_card, container, false);
+
+        TextView back = view.findViewById(R.id.backButton);
+
+        MainActivityData mainActivityData = new ViewModelProvider(getActivity()).get(MainActivityData.class);
+        // getActivity() retrieves the activity the fragment is associated with, hence it will be the same as MainActivity.
+
+        back.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                // Will set the value so that it goes back to the contact list
+                mainActivityData.toContactList();
+            }
+        });
+
+        return view;
     }
 }

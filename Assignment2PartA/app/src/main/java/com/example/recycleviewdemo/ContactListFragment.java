@@ -3,6 +3,7 @@ package com.example.recycleviewdemo;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -74,12 +75,15 @@ public class ContactListFragment extends Fragment
 
         ContactDAO contactDAO = ContactDBInstance.getDatabase(getContext().getApplicationContext()).contactDAO();
 
+        MainActivityData mainActivityData = new ViewModelProvider(getActivity()).get(MainActivityData.class);
+
         add.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                // Create a fragment to create the contact card fragment
+                // Will set the value to go to the contact card fragment
+                mainActivityData.toContactCard();
             }
         });
 
