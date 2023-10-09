@@ -1,16 +1,26 @@
 package com.example.recycleviewdemo;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,7 +34,8 @@ import java.util.List;
  * Use the {@link ContactCardFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ContactCardFragment extends Fragment{
+public class ContactCardFragment extends Fragment
+{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,6 +45,24 @@ public class ContactCardFragment extends Fragment{
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    ImageView contactPicture;
+
+    // ActivityResultLauncher to retrieve and store the information.
+    ActivityResultLauncher<Intent> pictureLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if (result.getResultCode() == RESULT_OK)
+                        {
+                            Intent data = result.getData();
+                            Bitmap image = (Bitmap) data.getExtras().get("data");
+                            if (image != null)
+                            {
+                                contactPicture.setImageBitmap(image);
+                            }
+                        }
+                    });
 
     public ContactCardFragment() {
         // Required empty public constructor
@@ -85,7 +114,9 @@ public class ContactCardFragment extends Fragment{
         EditText number = view.findViewById(R.id.phoneNumber);
         EditText email = view.findViewById(R.id.email);
 
-        ImageView picture;
+        contactPicture = view.findViewById(R.id.image);
+
+        Button capture = view.findViewById(R.id.captureImage);
 
         TextView back = view.findViewById(R.id.backButton);
         TextView save = view.findViewById(R.id.addContact);
@@ -106,6 +137,7 @@ public class ContactCardFragment extends Fragment{
             name.setText(temp.getName());
             number.setText(temp.getPhoneNumber());
             email.setText(temp.getEmail());
+            contactPicture.setImageBitmap(temp.getImage());
 
             mainActivityData.modify = false;
 
@@ -121,6 +153,7 @@ public class ContactCardFragment extends Fragment{
                 name.setText("Name");
                 number.setText("Mobile Number");
                 email.setText("Email");
+                contactPicture.setImageBitmap(null);
 
                 // Will set the value so that it goes back to the contact list
                 mainActivityData.toContactList();
@@ -143,16 +176,32 @@ public class ContactCardFragment extends Fragment{
                 else
                 {
                     Contact newContact = new Contact(name.getText().toString(), number.getText().toString(), email.getText().toString());
+                    newContact.setImage(((BitmapDrawable)contactPicture.getDrawable()).getBitmap());
                     contactDAO.insert(newContact);
 
                     // Reset the values of the EditText views
                     name.setText("Name");
                     number.setText("Mobile Number");
                     email.setText("Email");
+                    contactPicture.setImageBitmap(null);
 
                     mainActivityData.toContactList();
                     mainActivityData.modify = false;
                 }
+            }
+        });
+
+        capture.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                // Implicit intent to call the photo app.
+                Intent intent = new Intent();
+
+                // Set the action to navigate to the photo app.
+                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+                pictureLauncher.launch(intent);
             }
         });
     }

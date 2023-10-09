@@ -52,7 +52,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactVH> {
             {
                 MainActivityData mainActivityData = new ViewModelProvider((AppCompatActivity) view.getContext()).get(MainActivityData.class);
 
-                // We need the position to know where in the list of datat ot reference
+                // We need the position to know where in the list of data to reference
                 mainActivityData.position = position;
                 mainActivityData.modify = true;
 
