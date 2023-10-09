@@ -46,6 +46,8 @@ public class ContactListFragment extends Fragment
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private ContactAdapter adapter;
+    private RecyclerView rv;
     private static final int REQUEST_READ_CONTACT_PERMISSION = 3;
 
     ActivityResultLauncher<Intent> pickContactLauncher = registerForActivityResult(
@@ -118,12 +120,20 @@ public class ContactListFragment extends Fragment
         ArrayList<Contact> data = new ArrayList<Contact>(contactDAO.getAllContacts());
 
         // Make a reference to the RecyclerView
-        RecyclerView rv = view.findViewById(R.id.recView);
+        rv = view.findViewById(R.id.recView);
 
         // Set the layout manager
         rv.setLayoutManager(new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false));
 
-        ContactAdapter adapter = new ContactAdapter(data);
+         adapter = new ContactAdapter(data);
+
+        RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                Log.d("adapter changeD?", "adapter changeD?");
+
+            }
+        };
 
         /*this is the advanced adapter*/
         // ContactAdapterAdv adapter = new ContactAdapterAdv(data);
@@ -153,6 +163,8 @@ public class ContactListFragment extends Fragment
                 } else {
                     importButtonClicked();
                 }
+                adapter.notifyDataSetChanged();
+                Log.d("Data update", "Data update");
             }
         });
     }
@@ -237,6 +249,10 @@ public class ContactListFragment extends Fragment
         Contact newContact = new Contact(name, phone, email);
         ContactDAO contactDAO = ContactDBInstance.getDatabase(getContext().getApplicationContext()).contactDAO();
         contactDAO.insert(newContact);
+        ArrayList<Contact> newData = new ArrayList<Contact>(contactDAO.getAllContacts());
+        adapter = new ContactAdapter(newData);
+        rv.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
