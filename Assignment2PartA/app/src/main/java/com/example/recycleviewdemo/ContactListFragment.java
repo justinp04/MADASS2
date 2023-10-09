@@ -2,12 +2,20 @@ package com.example.recycleviewdemo;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.Manifest;
 import android.app.Instrumentation;
 import android.content.Intent;
+import android.content.ContextWrapper;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -19,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -37,6 +46,9 @@ public class ContactListFragment extends Fragment
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private ContactAdapter adapter;
+    private RecyclerView rv;
+    private static final int REQUEST_READ_CONTACT_PERMISSION = 3;
 
     ActivityResultLauncher<Intent> pickContactLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -44,10 +56,12 @@ public class ContactListFragment extends Fragment
                 if(result.getResultCode() == RESULT_OK)
                 {
                     Intent data = result.getData();
-//                    processPickContactResult(data);
+                    processPickContactResult(data);
                 }
             }
     );
+
+
 
     public ContactListFragment() {
         // Required empty public constructor
@@ -106,12 +120,20 @@ public class ContactListFragment extends Fragment
         ArrayList<Contact> data = new ArrayList<Contact>(contactDAO.getAllContacts());
 
         // Make a reference to the RecyclerView
-        RecyclerView rv = view.findViewById(R.id.recView);
+        rv = view.findViewById(R.id.recView);
 
         // Set the layout manager
         rv.setLayoutManager(new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false));
 
-        ContactAdapter adapter = new ContactAdapter(data);
+         adapter = new ContactAdapter(data);
+
+        RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                Log.d("adapter changeD?", "adapter changeD?");
+
+            }
+        };
 
         /*this is the advanced adapter*/
         // ContactAdapterAdv adapter = new ContactAdapterAdv(data);
@@ -131,16 +153,119 @@ public class ContactListFragment extends Fragment
         importContact.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(View view)
-            {
-                // App to app interactions use explicit intents
-                Intent intent = new Intent();
-
-                // Declare the action as starting up the contacts app
-                intent.setAction(Intent.ACTION_PICK);
-                intent.setData(ContactsContract.Contacts.CONTENT_URI);
-
+            public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(getContext(),
+                        android.Manifest.permission.READ_CONTACTS)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[]{Manifest.permission.READ_CONTACTS},
+                            REQUEST_READ_CONTACT_PERMISSION);
+                } else {
+                    importButtonClicked();
+                }
+                adapter.notifyDataSetChanged();
+                Log.d("Data update", "Data update");
             }
         });
+    }
+
+    private void importButtonClicked()
+    {
+        // App to app interactions use explicit intents
+        Intent intent = new Intent();
+
+        // Declare the action as starting up the contacts app
+        intent.setAction(Intent.ACTION_PICK);
+        intent.setData(ContactsContract.Contacts.CONTENT_URI);
+        pickContactLauncher.launch(intent);
+    }
+    private void processPickContactResult(Intent data) {
+        Uri contactUri = data.getData();
+        Uri phoneUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        Uri emailUri = ContactsContract.CommonDataKinds.Email.CONTENT_URI;
+        String name = "";
+        String phone = "";
+        String email = "";
+        Integer id = null;
+
+        String[] queryFields = new String[]{
+                ContactsContract.Contacts._ID,
+                ContactsContract.Contacts.DISPLAY_NAME,
+        };
+
+        Cursor c = getActivity().getContentResolver().query(
+                contactUri, queryFields, null, null, null);
+        try {
+            if (c.getCount() > 0) {
+                c.moveToFirst();
+                id = c.getInt(0);
+                name = c.getString(1);
+            }
+        }
+        finally {
+            c.close();
+        }
+
+        queryFields = new String[] {
+                ContactsContract.CommonDataKinds.Phone.NUMBER
+        };
+        String whereClause = ContactsContract.CommonDataKinds.Phone.CONTACT_ID +  "=?";
+        String[] whereValues = new String[] {
+                String.valueOf(id)
+        };
+        c = getActivity().getContentResolver().query(
+                phoneUri, queryFields, whereClause, whereValues, null);
+        try{
+            c.moveToFirst();
+            do{
+                phone = c.getString(0);
+            }
+            while (c.moveToNext());
+        }
+        finally {
+            c.close();
+        }
+
+        queryFields = new String[] {
+                ContactsContract.CommonDataKinds.Email.ADDRESS
+        };
+        whereClause = ContactsContract.CommonDataKinds.Phone.CONTACT_ID +  "=?";
+        whereValues = new String[] {
+                String.valueOf(id)
+        };
+        c = getActivity().getContentResolver().query(
+                emailUri, queryFields, whereClause, whereValues, null);
+        try{
+            c.moveToFirst();
+            do{
+                email = c.getString(0);
+            }
+            while (c.moveToNext());
+        }
+        finally {
+            c.close();
+        }
+
+        Contact newContact = new Contact(name, phone, email);
+        ContactDAO contactDAO = ContactDBInstance.getDatabase(getContext().getApplicationContext()).contactDAO();
+        contactDAO.insert(newContact);
+        ArrayList<Contact> newData = new ArrayList<Contact>(contactDAO.getAllContacts());
+        adapter = new ContactAdapter(newData);
+        rv.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode==REQUEST_READ_CONTACT_PERMISSION){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getActivity(), "Contact Reading Permission Granted",
+                        Toast.LENGTH_SHORT).show();
+                importButtonClicked();
+            }
+        }
     }
 }
