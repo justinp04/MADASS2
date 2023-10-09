@@ -5,6 +5,7 @@ import static android.app.Activity.RESULT_OK;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.provider.MediaStore;
@@ -45,6 +47,7 @@ public class ContactCardFragment extends Fragment
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private boolean imageCaptured = false;
 
     ImageView contactPicture;
 
@@ -127,22 +130,30 @@ public class ContactCardFragment extends Fragment
         ContactDAO contactDAO = ContactDBInstance.getDatabase(getContext().getApplicationContext()).contactDAO();
 
         // If we are modifying a contact instead of adding new data
-        if(mainActivityData.modify)
-        {
-            // Retrieve the correct contact data
-            List<Contact> list = contactDAO.getAllContacts();
-            Contact temp = list.get(mainActivityData.position);
+        mainActivityData.modify.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean bboolean) {
+                if(mainActivityData.modify.equals(true))
+                {
+                    // Retrieve the correct contact data
+                    List<Contact> list = contactDAO.getAllContacts();
+                    Contact temp = list.get(mainActivityData.position);
 
-            // Set the values to what should already exist
-            name.setText(temp.getName());
-            number.setText(temp.getPhoneNumber());
-            email.setText(temp.getEmail());
-            contactPicture.setImageBitmap(temp.getImage());
+                    imageCaptured = true;
 
-            mainActivityData.modify = false;
+                    // Set the values to what should already exist
+                    name.setText(temp.getName());
+                    number.setText(temp.getPhoneNumber());
+                    email.setText(temp.getEmail());
+                    contactPicture.setImageBitmap(temp.getImage());
 
-            Log.d("EXISTS","The contact exists" + temp.getName());
-        }
+                    mainActivityData.modify.setValue(false);
+                    Log.d("EXISTS","The contact exists" + temp.getName());
+                }
+            }
+
+            });
+
 
         back.setOnClickListener(new View.OnClickListener()
         {
@@ -153,11 +164,12 @@ public class ContactCardFragment extends Fragment
                 name.setText("Name");
                 number.setText("Mobile Number");
                 email.setText("Email");
-                contactPicture.setImageBitmap(null);
+                Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.default_icon);
+                contactPicture.setImageBitmap(icon);
 
                 // Will set the value so that it goes back to the contact list
                 mainActivityData.toContactList();
-                mainActivityData.modify = false;
+                mainActivityData.modify.setValue(false);
             }
         });
 
@@ -173,20 +185,28 @@ public class ContactCardFragment extends Fragment
                     Toast toast = Toast.makeText(getContext(), "Mobile Number invalid", Toast.LENGTH_SHORT);
                     toast.show();
                 }
-                else
-                {
-                    Contact newContact = new Contact(name.getText().toString(), number.getText().toString(), email.getText().toString());
-                    newContact.setImage(((BitmapDrawable)contactPicture.getDrawable()).getBitmap());
-                    contactDAO.insert(newContact);
+                else {
+                    if (mainActivityData.modify.equals(true)) {
+                        String phone = mainActivityData.currPhone;
+                        Contact currContact = contactDAO.getContactByNumber(Integer.parseInt(phone));
+
+                    } else {
+                        Contact newContact = new Contact(name.getText().toString(), number.getText().toString(), email.getText().toString());
+                        if (imageCaptured)
+                            newContact.setImage(((BitmapDrawable) contactPicture.getDrawable()).getBitmap());
+                        else
+                            newContact.setImage(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.default_icon));
+                        contactDAO.insert(newContact);
+                    }
 
                     // Reset the values of the EditText views
                     name.setText("Name");
                     number.setText("Mobile Number");
                     email.setText("Email");
-                    contactPicture.setImageBitmap(null);
+                    contactPicture.setImageBitmap(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.default_icon));
 
                     mainActivityData.toContactList();
-                    mainActivityData.modify = false;
+                    mainActivityData.modify.setValue(false);
                 }
             }
         });
@@ -202,6 +222,9 @@ public class ContactCardFragment extends Fragment
                 // Set the action to navigate to the photo app.
                 intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
                 pictureLauncher.launch(intent);
+
+                imageCaptured = true;
+
             }
         });
     }

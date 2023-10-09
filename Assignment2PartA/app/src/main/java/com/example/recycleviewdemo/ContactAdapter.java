@@ -54,7 +54,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactVH> {
 
                 // We need the position to know where in the list of data to reference
                 mainActivityData.position = position;
-                mainActivityData.modify = true;
+                mainActivityData.currPhone = data.get(position).getPhoneNumber();
+                mainActivityData.modify.setValue(true);
 
                 mainActivityData.toContactCard();
             }

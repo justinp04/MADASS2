@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.ContextWrapper;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -36,8 +37,7 @@ import java.util.ArrayList;
  * Use the {@link ContactListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ContactListFragment extends Fragment
-{
+public class ContactListFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -53,14 +53,12 @@ public class ContactListFragment extends Fragment
     ActivityResultLauncher<Intent> pickContactLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if(result.getResultCode() == RESULT_OK)
-                {
+                if (result.getResultCode() == RESULT_OK) {
                     Intent data = result.getData();
                     processPickContactResult(data);
                 }
             }
     );
-
 
 
     public ContactListFragment() {
@@ -86,20 +84,17 @@ public class ContactListFragment extends Fragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null)
-        {
+        if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_contact_list_, container, false);
 
@@ -107,9 +102,17 @@ public class ContactListFragment extends Fragment
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        pickContactLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = result.getData();
+                        processPickContactResult(data);
+                    }
+                }
+        );
 
         TextView add = view.findViewById(R.id.addContact);
         TextView importContact = view.findViewById(R.id.importButton);
@@ -125,7 +128,7 @@ public class ContactListFragment extends Fragment
         // Set the layout manager
         rv.setLayoutManager(new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false));
 
-         adapter = new ContactAdapter(data);
+        adapter = new ContactAdapter(data);
 
         RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
             @Override
@@ -139,19 +142,16 @@ public class ContactListFragment extends Fragment
         // ContactAdapterAdv adapter = new ContactAdapterAdv(data);
         rv.setAdapter(adapter);
 
-        add.setOnClickListener(new View.OnClickListener()
-        {
+        add.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 // Will set the value to go to the contact card fragment
                 mainActivityData.toContactCard();
             }
         });
 
         // This listener will, when clicked, import contacts from the built in contacts app.
-        importContact.setOnClickListener(new View.OnClickListener()
-        {
+        importContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (ContextCompat.checkSelfPermission(getContext(),
@@ -169,8 +169,7 @@ public class ContactListFragment extends Fragment
         });
     }
 
-    private void importButtonClicked()
-    {
+    private void importButtonClicked() {
         // App to app interactions use explicit intents
         Intent intent = new Intent();
 
@@ -179,7 +178,9 @@ public class ContactListFragment extends Fragment
         intent.setData(ContactsContract.Contacts.CONTENT_URI);
         pickContactLauncher.launch(intent);
     }
+
     private void processPickContactResult(Intent data) {
+        Log.d("poo","poo");
         Uri contactUri = data.getData();
         Uri phoneUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
         Uri emailUri = ContactsContract.CommonDataKinds.Email.CONTENT_URI;
@@ -201,52 +202,49 @@ public class ContactListFragment extends Fragment
                 id = c.getInt(0);
                 name = c.getString(1);
             }
-        }
-        finally {
+        } finally {
             c.close();
         }
 
-        queryFields = new String[] {
+        queryFields = new String[]{
                 ContactsContract.CommonDataKinds.Phone.NUMBER
         };
-        String whereClause = ContactsContract.CommonDataKinds.Phone.CONTACT_ID +  "=?";
-        String[] whereValues = new String[] {
+        String whereClause = ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?";
+        String[] whereValues = new String[]{
                 String.valueOf(id)
         };
         c = getActivity().getContentResolver().query(
                 phoneUri, queryFields, whereClause, whereValues, null);
-        try{
+        try {
             c.moveToFirst();
-            do{
+            do {
                 phone = c.getString(0);
             }
             while (c.moveToNext());
-        }
-        finally {
+        } finally {
             c.close();
         }
 
-        queryFields = new String[] {
+        queryFields = new String[]{
                 ContactsContract.CommonDataKinds.Email.ADDRESS
         };
-        whereClause = ContactsContract.CommonDataKinds.Phone.CONTACT_ID +  "=?";
-        whereValues = new String[] {
+        whereClause = ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=?";
+        whereValues = new String[]{
                 String.valueOf(id)
         };
         c = getActivity().getContentResolver().query(
                 emailUri, queryFields, whereClause, whereValues, null);
-        try{
+        try {
             c.moveToFirst();
-            do{
+            do {
                 email = c.getString(0);
             }
             while (c.moveToNext());
-        }
-        finally {
+        } finally {
             c.close();
         }
 
-        Contact newContact = new Contact(name, phone, email);
+        Contact newContact = new Contact(name, phone, email, BitmapFactory.decodeResource(getContext().getResources(), R.drawable.default_icon));
         ContactDAO contactDAO = ContactDBInstance.getDatabase(getContext().getApplicationContext()).contactDAO();
         contactDAO.insert(newContact);
         ArrayList<Contact> newData = new ArrayList<Contact>(contactDAO.getAllContacts());
@@ -260,7 +258,7 @@ public class ContactListFragment extends Fragment
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode==REQUEST_READ_CONTACT_PERMISSION){
+        if (requestCode == REQUEST_READ_CONTACT_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(getActivity(), "Contact Reading Permission Granted",
                         Toast.LENGTH_SHORT).show();
