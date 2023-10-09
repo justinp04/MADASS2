@@ -1,11 +1,16 @@
 package com.example.recycleviewdemo;
 
+import android.graphics.Bitmap;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import androidx.room.TypeConverter;
+import androidx.room.TypeConverters;
 
 @Entity(tableName = "contacts")
+@TypeConverters({BitmapConverter.class})
 public class Contact
 {
     @ColumnInfo(name = "contact_name")
@@ -16,12 +21,15 @@ public class Contact
     @NonNull
     private String phoneNumber;
 
+    private Bitmap image;
+
     private String email;
     public Contact(String name, String phoneNumber, String email)
     {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = email;
+        image = null;
     }
 
     public String getPhoneNumber()
@@ -38,11 +46,15 @@ public class Contact
         return email;
     }
 
+    public Bitmap getImage()
+    {
+        return image;
+    }
+
     public void setPhoneNumber(String phoneNumber)
     {
         this.phoneNumber = phoneNumber;
     }
-
 
     public void setName(String name)
     {
@@ -52,5 +64,10 @@ public class Contact
     public void setEmail(String email)
     {
         this.email = email;
+    }
+
+    public void setImage(Bitmap image)
+    {
+        this.image = image;
     }
 }
