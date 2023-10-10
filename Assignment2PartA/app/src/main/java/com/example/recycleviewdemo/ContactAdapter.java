@@ -56,6 +56,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactVH> {
                 mainActivityData.position = position;
                 mainActivityData.currPhone = data.get(position).getPhoneNumber();
                 mainActivityData.modify.setValue(true);
+                Log.d("mainactmod", ""+mainActivityData.modify.getValue());
 
                 mainActivityData.toContactCard();
             }

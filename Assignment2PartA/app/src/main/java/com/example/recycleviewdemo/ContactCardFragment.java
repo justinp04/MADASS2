@@ -104,7 +104,7 @@ public class ContactCardFragment extends Fragment
     {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_contact_card, container, false);
-
+        MainActivityData mainActivityData = new ViewModelProvider(getActivity()).get(MainActivityData.class);
         return view;
     }
 
@@ -142,6 +142,7 @@ public class ContactCardFragment extends Fragment
                     imageCaptured = true;
 
                     // Set the values to what should already exist
+                    Log.d("modify", ""+temp.getName());
                     name.setText(temp.getName());
                     number.setText(temp.getPhoneNumber());
                     email.setText(temp.getEmail());
@@ -151,8 +152,26 @@ public class ContactCardFragment extends Fragment
                     Log.d("EXISTS","The contact exists" + temp.getName());
                 }
             }
-
             });
+
+
+        if (mainActivityData.modify.equals(true)) {
+            // Retrieve the correct contact data
+            List<Contact> list = contactDAO.getAllContacts();
+            Contact temp = list.get(mainActivityData.position);
+
+            imageCaptured = true;
+
+            // Set the values to what should already exist
+            Log.d("modify", ""+temp.getName());
+            name.setText(temp.getName());
+            number.setText(temp.getPhoneNumber());
+            email.setText(temp.getEmail());
+            contactPicture.setImageBitmap(temp.getImage());
+
+            mainActivityData.modify.setValue(false);
+            Log.d("EXISTS","The contact exists" + temp.getName());
+        }
 
 
         back.setOnClickListener(new View.OnClickListener()
