@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        int span = 1;
+        int span = 2;
         RecyclerView rv= findViewById(R.id.imageList);
         rv.setLayoutManager(new GridLayoutManager(this, span));
         ImageDataAdapter adapter = new ImageDataAdapter(data);
