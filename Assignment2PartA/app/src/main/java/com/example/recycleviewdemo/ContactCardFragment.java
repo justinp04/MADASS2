@@ -52,6 +52,7 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
     private EditText number;
     private EditText name;
     private ImageView contactPicture;
+    private Bitmap contactPitureBitmap;
     private TextView save;
     private TextView back;
     // ActivityResultLauncher to retrieve and store the information.
@@ -62,6 +63,7 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
                         if (result.getResultCode() == RESULT_OK) {
                             Intent data = result.getData();
                             Bitmap image = (Bitmap) data.getExtras().get("data");
+                            contactPitureBitmap = image;
                             if (image != null) {
                                 contactPicture.setImageBitmap(image);
                             }
@@ -117,6 +119,7 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
                     if (result.getResultCode() == RESULT_OK) {
                         Intent data = result.getData();
                         Bitmap image = (Bitmap) data.getExtras().get("data");
+                        contactPitureBitmap = image;
                         if (image != null) {
                             contactPicture.setImageBitmap(image);
                         }
@@ -145,6 +148,7 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
             name.setText(cName);
             number.setText(cPhoneNumber);
             email.setText(cEmail);
+            contactPitureBitmap = cImage;
             contactPicture.setImageBitmap(cImage);
         } else {
             // Reset the values of the EditText views
@@ -152,8 +156,9 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
             name.setText("Name");
             number.setText("Mobile Number");
             email.setText("Email");
-            Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.default_icon);
-            contactPicture.setImageBitmap(icon);
+            contactPitureBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.default_icon);
+            contactPicture.setImageBitmap(contactPitureBitmap);
+
         }
         Log.d("check contact name", "Check contact: " + name.getText() + " " + cName);
         // If we are modifying a contact instead of adding new data
@@ -228,26 +233,52 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
                 } else if (!isNumber(number.getText().toString())) {
                     Toast toast = Toast.makeText(getContext(), "Mobile Number invalid", Toast.LENGTH_SHORT);
                     toast.show();
-                } else {
-                    if (mainActivityData.modify.equals(true)) {
-                        String phone = mainActivityData.currPhone;
-                        Contact currContact = contactDAO.getContactByNumber(Integer.parseInt(phone));
-
-                    } else {
+                }
+                else {
+                    //Modify existing contact
+                    if (mainActivityData.modify.getValue() == true) {
+                        Contact currContact = contactDAO.getContactByNumber(Integer.parseInt(cPhoneNumber));
+                        //Check if phone number is same as primary key
+                        if (number.getText().toString().equals(currContact.getPhoneNumber()))
+                        {
+                            currContact.setName(name.getText().toString());
+                            currContact.setEmail(email.getText().toString());
+                            currContact.setImage(contactPitureBitmap);
+                            contactDAO.update(currContact);
+                        }
+                        //if phone number has updated, delete old contact and insert new
+                        else
+                        {
+                            contactDAO.delete(currContact);
+                            currContact.setName(name.getText().toString());
+                            currContact.setEmail(email.getText().toString());
+                            currContact.setImage(contactPitureBitmap);
+                            currContact.setPhoneNumber(number.getText().toString());
+                            contactDAO.insert(currContact);
+                        }
+                    } else if (contactDAO.getContactByNumber(Integer.parseInt(number.getText().toString())) != null) {
+                        Toast toast = Toast.makeText(getContext(), "Contact already exists", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                    //Create new contact
+                    else {
                         Contact newContact = new Contact(name.getText().toString(), number.getText().toString(), email.getText().toString());
+                        //check if added image
                         if (imageCaptured)
                             newContact.setImage(((BitmapDrawable) contactPicture.getDrawable()).getBitmap());
+                        //use default image if not.
                         else
                             newContact.setImage(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.default_icon));
                         contactDAO.insert(newContact);
                     }
 
+                    /*
                     // Reset the values of the EditText views
                     name.setText("Name");
                     number.setText("Mobile Number");
                     email.setText("Email");
                     contactPicture.setImageBitmap(BitmapFactory.decodeResource(getContext().getResources(), R.drawable.default_icon));
-
+                    */
                     mainActivityData.toContactList();
                     mainActivityData.modify.setValue(false);
                 }
@@ -282,6 +313,7 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
             name.setText(cName);
             number.setText(cPhoneNumber);
             email.setText(cEmail);
+            contactPitureBitmap = cImage;
             contactPicture.setImageBitmap(cImage);
         } else {
             // Reset the values of the EditText views
@@ -289,8 +321,8 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
             name.setText("Name");
             number.setText("Mobile Number");
             email.setText("Email");
-            Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.default_icon);
-            contactPicture.setImageBitmap(icon);
+            contactPitureBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.default_icon);
+            contactPicture.setImageBitmap(contactPitureBitmap);
         }
         Log.d("check contact name", "RESCheck contact: " + name.getText() + " " + cName);
     }

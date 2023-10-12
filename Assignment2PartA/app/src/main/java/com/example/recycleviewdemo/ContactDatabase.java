@@ -12,4 +12,10 @@ public abstract class ContactDatabase extends RoomDatabase
 {
     // There must be an abstract method for each DAO class that is associated with this Database
     public abstract ContactDAO contactDAO();
+
+    public static boolean checkContactExists(int phoneNumber)
+    {
+        String query = "SELECT * FROM contacts WHERE phoneNumber = " + phoneNumber;
+        return true;
+    }
 }
