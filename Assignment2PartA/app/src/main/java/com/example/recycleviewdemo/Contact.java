@@ -1,6 +1,7 @@
 package com.example.recycleviewdemo;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -22,14 +23,22 @@ public class Contact
     private String phoneNumber;
 
     private Bitmap image;
-
     private String email;
+
     public Contact(String name, String phoneNumber, String email)
     {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = email;
-        image = null;
+        this.image = BitmapFactory.decodeFile("Assignment2PartA/app/src/main/res/drawable/default_icon.png");
+
+    }
+    public Contact(String name, String phoneNumber, String email, Bitmap bitmap)
+    {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.image = bitmap;
     }
 
     public String getPhoneNumber()
