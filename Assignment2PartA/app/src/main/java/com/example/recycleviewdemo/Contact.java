@@ -23,8 +23,8 @@ public class Contact
     private String phoneNumber;
 
     private Bitmap image;
-
     private String email;
+
     public Contact(String name, String phoneNumber, String email)
     {
         this.name = name;

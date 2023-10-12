@@ -36,7 +36,7 @@ import java.util.List;
  * Use the {@link ContactCardFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ContactCardFragment extends Fragment
+public class ContactCardFragment extends Fragment implements OnAdapterClick
 {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -48,6 +48,12 @@ public class ContactCardFragment extends Fragment
     private String mParam1;
     private String mParam2;
     private boolean imageCaptured = false;
+
+    private String cName = null;
+    private String cPhoneNumber = null;
+
+    private Bitmap cImage = null;
+    private String cEmail = null;
 
     ImageView contactPicture;
 
@@ -129,6 +135,23 @@ public class ContactCardFragment extends Fragment
 
         ContactDAO contactDAO = ContactDBInstance.getDatabase(getContext().getApplicationContext()).contactDAO();
 
+        //Check to see if listener has changed values (ie card being modified.)
+        if(cName != null)
+        {
+            name.setText(cName);
+            number.setText(cPhoneNumber);
+            email.setText(cEmail);
+            contactPicture.setImageBitmap(cImage);
+        }
+        else
+        {
+            // Reset the values of the EditText views
+            name.setText("Name");
+            number.setText("Mobile Number");
+            email.setText("Email");
+            Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.default_icon);
+            contactPicture.setImageBitmap(icon);
+        }
         // If we are modifying a contact instead of adding new data
         mainActivityData.modify.observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
@@ -262,5 +285,14 @@ public class ContactCardFragment extends Fragment
         }
 
         return isNumber;
+    }
+
+    //If the adapter has been clicked, set values to contact values
+    @Override
+    public void onAdapterClick(Contact data) {
+        cName = data.getName();
+        cPhoneNumber = data.getPhoneNumber();
+        cEmail = data.getEmail();
+        cImage = data.getImage();
     }
 }

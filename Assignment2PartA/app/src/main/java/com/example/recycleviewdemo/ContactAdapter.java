@@ -1,10 +1,13 @@
 package com.example.recycleviewdemo;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,8 +20,10 @@ import java.util.ArrayList;
 public class ContactAdapter extends RecyclerView.Adapter<ContactVH> {
 
     ArrayList<Contact> data;
-    public ContactAdapter(ArrayList<Contact> data){
+    OnAdapterClick listener;
+    public ContactAdapter(ArrayList<Contact> data, OnAdapterClick listener){
         this.data = data;
+        this.listener = listener;
     }
     @NonNull
     @Override
@@ -51,6 +56,8 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactVH> {
             public void onClick(View view)
             {
                 MainActivityData mainActivityData = new ViewModelProvider((AppCompatActivity) view.getContext()).get(MainActivityData.class);
+                //call listener to change data in card before it is loaded.
+                listener.onAdapterClick(singleData);
 
                 // We need the position to know where in the list of data to reference
                 mainActivityData.position = position;
@@ -67,4 +74,5 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactVH> {
     public int getItemCount() {
         return data.size();
     }
+
 }

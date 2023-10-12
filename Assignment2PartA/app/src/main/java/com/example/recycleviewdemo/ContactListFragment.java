@@ -47,6 +47,7 @@ public class ContactListFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private ContactAdapter adapter;
+    private ContactCardFragment card;
     private RecyclerView rv;
     private static final int REQUEST_READ_CONTACT_PERMISSION = 3;
 
@@ -128,7 +129,7 @@ public class ContactListFragment extends Fragment {
         // Set the layout manager
         rv.setLayoutManager(new GridLayoutManager(getActivity(), 1, GridLayoutManager.VERTICAL, false));
 
-        adapter = new ContactAdapter(data);
+        adapter = new ContactAdapter(data, card);
 
         RecyclerView.AdapterDataObserver observer = new RecyclerView.AdapterDataObserver() {
             @Override
@@ -248,7 +249,7 @@ public class ContactListFragment extends Fragment {
         ContactDAO contactDAO = ContactDBInstance.getDatabase(getContext().getApplicationContext()).contactDAO();
         contactDAO.insert(newContact);
         ArrayList<Contact> newData = new ArrayList<Contact>(contactDAO.getAllContacts());
-        adapter = new ContactAdapter(newData);
+        adapter = new ContactAdapter(newData, card);
         rv.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
@@ -265,5 +266,9 @@ public class ContactListFragment extends Fragment {
                 importButtonClicked();
             }
         }
+    }
+
+    public void setCard(ContactCardFragment card) {
+        this.card = card;
     }
 }
