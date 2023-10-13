@@ -253,7 +253,7 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
             @Override
             public void onClick(View view) {
                 //get old contact details via old phone number
-                Contact currContact = contactDAO.getContactByNumber(Integer.parseInt(cPhoneNumber));
+                Contact currContact = contactDAO.getContactByNumber(cPhoneNumber);
                 //boolean to check if modifying a contact
                 boolean mod = mainActivityData.modify.getValue();
                 //boolean to check if a contact exists with the entered number
@@ -265,13 +265,13 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
                 else
                     numberNotUpdated = PhoneNumberUtils.compare(number.getText().toString(),
                         currContact.getPhoneNumber());
-                        //= number.getText().toString().equals(currContact.getPhoneNumber());
-                //Contact contactExist = contactDAO.getContactByNumber(Integer.parseInt(number.getText().toString()));
+
                 // Check if values are null or not
                 if (name.getText() == null || number.getText() == null) {
                 }
                 //check if number is valid
-                else if (!isNumber(number.getText().toString())) {
+                else if (!isNumber(number.getText().toString()) &&
+                        !PhoneNumberUtils.isGlobalPhoneNumber(number.getText().toString())) {
                     Toast toast = Toast.makeText(getContext(), "Mobile Number invalid", Toast.LENGTH_SHORT);
                     toast.show();
                 }
@@ -361,7 +361,7 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
                 boolean exists = Contact.contactExists(cPhoneNumber, contactDAO);
                 if(mod && exists)
                 {
-                    Contact currContact = contactDAO.getContactByNumber(Integer.parseInt(cPhoneNumber));
+                    Contact currContact = contactDAO.getContactByNumber(cPhoneNumber);
                     contactDAO.delete(currContact);
 
                     mainActivityData.toContactList();
