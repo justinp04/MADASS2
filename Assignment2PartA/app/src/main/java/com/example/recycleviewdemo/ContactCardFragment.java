@@ -25,6 +25,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ContactCardFragment#newInstance} factory method to
@@ -228,18 +231,39 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //get old contact details via old phone number
+                Contact currContact = contactDAO.getContactByNumber(Integer.parseInt(cPhoneNumber));
+                //boolean to check if modifying a contact
+                boolean mod = mainActivityData.modify.getValue();
+                //boolean to check if a contact exists with the entered number
+                boolean contactExist = contactExists(number.getText().toString(), contactDAO);
+                //boolean to check if the entered number is the same as the previous saved number
+                boolean numberNotUpdated = number.getText().toString().equals(currContact.getPhoneNumber());
+                //Contact contactExist = contactDAO.getContactByNumber(Integer.parseInt(number.getText().toString()));
                 // Check if values are null or not
                 if (name.getText() == null || number.getText() == null) {
-                } else if (!isNumber(number.getText().toString())) {
+                }
+                //check if number is valid
+                else if (!isNumber(number.getText().toString())) {
                     Toast toast = Toast.makeText(getContext(), "Mobile Number invalid", Toast.LENGTH_SHORT);
                     toast.show();
                 }
+                //check if trying to create a contact that already exists
+                else if (contactExist && !mod) {
+                    Toast toast = Toast.makeText(getContext(), "Contact already exists", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                //check to see if modified number is same as contact that already exists
+                else if (contactExist && mod && !numberNotUpdated) {
+                    Toast toast = Toast.makeText(getContext(), "Contact already exists", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+                //otherwise contact number is valid
                 else {
                     //Modify existing contact
-                    if (mainActivityData.modify.getValue() == true) {
-                        Contact currContact = contactDAO.getContactByNumber(Integer.parseInt(cPhoneNumber));
-                        //Check if phone number is same as primary key
-                        if (number.getText().toString().equals(currContact.getPhoneNumber()))
+                    if (mod) {
+                        //Check if phone number has changed
+                        if (numberNotUpdated)
                         {
                             currContact.setName(name.getText().toString());
                             currContact.setEmail(email.getText().toString());
@@ -256,9 +280,6 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
                             currContact.setPhoneNumber(number.getText().toString());
                             contactDAO.insert(currContact);
                         }
-                    } else if (contactDAO.getContactByNumber(Integer.parseInt(number.getText().toString())) != null) {
-                        Toast toast = Toast.makeText(getContext(), "Contact already exists", Toast.LENGTH_SHORT);
-                        toast.show();
                     }
                     //Create new contact
                     else {
@@ -347,5 +368,19 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
         cPhoneNumber = data.getPhoneNumber();
         cEmail = data.getEmail();
         cImage = data.getImage();
+    }
+
+    //Method to check if a new contract uses the same phone number as another.
+    private boolean contactExists(String phoneCheck, ContactDAO contactDAO)
+    {
+        List<Contact> contacts = contactDAO.getAllContacts();
+        boolean exists = false;
+        for (int i = 0; i < contacts.size(); i++)
+        {
+            Contact currContact = contacts.get(i);
+            if (currContact.getPhoneNumber().equals(phoneCheck))
+                exists = true;
+        }
+        return exists;
     }
 }
