@@ -60,6 +60,7 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
     private Bitmap defaultBitmap;
     private TextView save;
     private TextView back;
+    private Button delete;
     // ActivityResultLauncher to retrieve and store the information.
     ActivityResultLauncher<Intent> pictureLauncher =
             registerForActivityResult(
@@ -147,11 +148,23 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
 
         back = view.findViewById(R.id.backButton);
         save = view.findViewById(R.id.addContact);
+        delete = view.findViewById(R.id.deleteContact);
 
         MainActivityData mainActivityData = new ViewModelProvider(getActivity()).get(MainActivityData.class);
         // getActivity() retrieves the activity the fragment is associated with, hence it will be the same as MainActivity.
 
         ContactDAO contactDAO = ContactDBInstance.getDatabase(getContext().getApplicationContext()).contactDAO();
+
+        if (mainActivityData.modify.getValue() == false)
+        {
+            delete.setEnabled(false);
+            delete.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            delete.setEnabled(true);
+            delete.setVisibility(View.VISIBLE);
+        }
 
         //Check to see if listener has changed values (ie card being modified.)
         if (cName != null) {
@@ -341,6 +354,21 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
 
             }
         });
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean mod = mainActivityData.modify.getValue();
+                boolean exists = Contact.contactExists(cPhoneNumber, contactDAO);
+                if(mod && exists)
+                {
+                    Contact currContact = contactDAO.getContactByNumber(Integer.parseInt(cPhoneNumber));
+                    contactDAO.delete(currContact);
+
+                    mainActivityData.toContactList();
+                    mainActivityData.modify.setValue(false);
+                }
+            }
+        });
     }
 
     //onResume to check if data is changing.
@@ -348,7 +376,17 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
     public void onResume() {
 
         super.onResume();
-
+        MainActivityData mainActivityData = new ViewModelProvider(getActivity()).get(MainActivityData.class);
+        if (mainActivityData.modify.getValue() == false)
+        {
+            delete.setEnabled(false);
+            delete.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            delete.setEnabled(true);
+            delete.setVisibility(View.VISIBLE);
+        }
         //Check to see if listener has changed values (ie card being modified.)
         if (cName != null) {
             Log.d("cname check", "REScname!=null ");
