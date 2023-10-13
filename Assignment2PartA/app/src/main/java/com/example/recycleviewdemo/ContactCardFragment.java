@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.telephony.PhoneNumberUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +57,7 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
     private EditText name;
     private ImageView contactPicture;
     private Bitmap contactPitureBitmap;
+    private Bitmap defaultBitmap;
     private TextView save;
     private TextView back;
     // ActivityResultLauncher to retrieve and store the information.
@@ -66,8 +68,10 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
                         if (result.getResultCode() == RESULT_OK) {
                             Intent data = result.getData();
                             Bitmap image = (Bitmap) data.getExtras().get("data");
-                            contactPitureBitmap = image;
                             if (image != null) {
+                                cImage = image;
+                                contactPitureBitmap = image;
+                                Log.d("bitmappin", "capture mode: " + contactPitureBitmap.equals(defaultBitmap));
                                 contactPicture.setImageBitmap(image);
                             }
                         }
@@ -116,14 +120,18 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        defaultBitmap =
+            BitmapFactory.decodeResource(getContext().getResources(), R.drawable.default_icon);
         pictureLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK) {
                         Intent data = result.getData();
                         Bitmap image = (Bitmap) data.getExtras().get("data");
-                        contactPitureBitmap = image;
                         if (image != null) {
+                            cImage = image;
+                            contactPitureBitmap = image;
+                            Log.d("bitmappin", "capture mode: " + contactPitureBitmap.equals(defaultBitmap));
                             contactPicture.setImageBitmap(image);
                         }
                     }
@@ -152,14 +160,14 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
             number.setText(cPhoneNumber);
             email.setText(cEmail);
             contactPitureBitmap = cImage;
-            contactPicture.setImageBitmap(cImage);
+            contactPicture.setImageBitmap(contactPitureBitmap);
         } else {
             // Reset the values of the EditText views
             Log.d("cname check", "cname==null");
             name.setText("Name");
             number.setText("Mobile Number");
             email.setText("Email");
-            contactPitureBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.default_icon);
+            contactPitureBitmap = defaultBitmap;
             contactPicture.setImageBitmap(contactPitureBitmap);
 
         }
@@ -238,7 +246,13 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
                 //boolean to check if a contact exists with the entered number
                 boolean contactExist = contactExists(number.getText().toString(), contactDAO);
                 //boolean to check if the entered number is the same as the previous saved number
-                boolean numberNotUpdated = number.getText().toString().equals(currContact.getPhoneNumber());
+                boolean numberNotUpdated;
+                if (currContact == null)
+                    numberNotUpdated = true;
+                else
+                    numberNotUpdated = PhoneNumberUtils.compare(number.getText().toString(),
+                        currContact.getPhoneNumber());
+                        //= number.getText().toString().equals(currContact.getPhoneNumber());
                 //Contact contactExist = contactDAO.getContactByNumber(Integer.parseInt(number.getText().toString()));
                 // Check if values are null or not
                 if (name.getText() == null || number.getText() == null) {
@@ -277,12 +291,15 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
                             currContact.setName(name.getText().toString());
                             currContact.setEmail(email.getText().toString());
                             currContact.setImage(contactPitureBitmap);
-                            currContact.setPhoneNumber(number.getText().toString());
+                            String formatNum = PhoneNumberUtils.formatNumber(
+                                    number.getText().toString(), "AU");
+                            currContact.setPhoneNumber(formatNum);
                             contactDAO.insert(currContact);
                         }
                     }
                     //Create new contact
                     else {
+                        //String formatNum = PhoneNumberUtils.formatNumber(number.getText().toString(), "AU");
                         Contact newContact = new Contact(name.getText().toString(), number.getText().toString(), email.getText().toString());
                         //check if added image
                         if (imageCaptured)
@@ -309,6 +326,10 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
         capture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //save details for later
+                cName = name.getText().toString();
+                cPhoneNumber = number.getText().toString();
+                cEmail = email.getText().toString();
                 // Implicit intent to call the photo app.
                 Intent intent = new Intent();
 
@@ -330,22 +351,34 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
 
         //Check to see if listener has changed values (ie card being modified.)
         if (cName != null) {
-            Log.d("cname check", "REScname!=null");
+            Log.d("cname check", "REScname!=null ");
             name.setText(cName);
             number.setText(cPhoneNumber);
             email.setText(cEmail);
             contactPitureBitmap = cImage;
-            contactPicture.setImageBitmap(cImage);
+            contactPicture.setImageBitmap(contactPitureBitmap);
+            Log.d("bitmappin", "bitmap onclick mode: " + contactPitureBitmap.equals(defaultBitmap));
         } else {
             // Reset the values of the EditText views
             Log.d("cname check", "REScname==null");
             name.setText("Name");
             number.setText("Mobile Number");
             email.setText("Email");
-            contactPitureBitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.default_icon);
+            contactPitureBitmap = defaultBitmap;
             contactPicture.setImageBitmap(contactPitureBitmap);
+            Log.d("bitmappin", "bitmap null mode: " + contactPitureBitmap.toString());
         }
         Log.d("check contact name", "RESCheck contact: " + name.getText() + " " + cName);
+    }
+
+    //onDestroy to reset stored names
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        cName = null;
+        cEmail = null;
+        cPhoneNumber = null;
+        cImage = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.default_icon);
     }
 
     // The following method will check if a given string contains letters or not
