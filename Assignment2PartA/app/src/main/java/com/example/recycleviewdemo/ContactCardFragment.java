@@ -244,7 +244,7 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
                 //boolean to check if modifying a contact
                 boolean mod = mainActivityData.modify.getValue();
                 //boolean to check if a contact exists with the entered number
-                boolean contactExist = contactExists(number.getText().toString(), contactDAO);
+                boolean contactExist = Contact.contactExists(number.getText().toString(), contactDAO);
                 //boolean to check if the entered number is the same as the previous saved number
                 boolean numberNotUpdated;
                 if (currContact == null)
@@ -403,17 +403,5 @@ public class ContactCardFragment extends Fragment implements OnAdapterClick {
         cImage = data.getImage();
     }
 
-    //Method to check if a new contract uses the same phone number as another.
-    private boolean contactExists(String phoneCheck, ContactDAO contactDAO)
-    {
-        List<Contact> contacts = contactDAO.getAllContacts();
-        boolean exists = false;
-        for (int i = 0; i < contacts.size(); i++)
-        {
-            Contact currContact = contacts.get(i);
-            if (currContact.getPhoneNumber().equals(phoneCheck))
-                exists = true;
-        }
-        return exists;
-    }
+
 }

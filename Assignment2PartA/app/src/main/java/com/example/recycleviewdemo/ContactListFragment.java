@@ -247,11 +247,19 @@ public class ContactListFragment extends Fragment {
 
         Contact newContact = new Contact(name, phone, email, BitmapFactory.decodeResource(getContext().getResources(), R.drawable.default_icon));
         ContactDAO contactDAO = ContactDBInstance.getDatabase(getContext().getApplicationContext()).contactDAO();
-        contactDAO.insert(newContact);
-        ArrayList<Contact> newData = new ArrayList<Contact>(contactDAO.getAllContacts());
-        adapter = new ContactAdapter(newData, card);
-        rv.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        boolean exists = newContact.contactExists(contactDAO);
+        if (exists)
+        {
+            Toast toast = Toast.makeText(getContext(), "Contact already exists", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+        else {
+            contactDAO.insert(newContact);
+            ArrayList<Contact> newData = new ArrayList<Contact>(contactDAO.getAllContacts());
+            adapter = new ContactAdapter(newData, card);
+            rv.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
