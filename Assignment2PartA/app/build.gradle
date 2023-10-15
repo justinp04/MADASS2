@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.recycleviewdemo'
+    namespace 'com.example.assignment2parta'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.recycleviewdemo"
+        applicationId "com.example.assignment2parta"
         minSdk 24
         targetSdk 33
         versionCode 1
