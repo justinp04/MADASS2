@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -14,72 +15,92 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ImageRetrievalThread extends Thread
 {
     private RemoteUtilities remoteUtilities;
     private SearchResponseViewModel sViewModel;
-    private ImageViewModel imageViewModel;
+    private List<ImageViewModel> imageViewModels;
     private ErrorViewModel errorViewModel;
     private Activity uiActivity;
+    public int numHits = 0;
 
-    public ImageRetrievalThread(Activity uiActivity, SearchResponseViewModel viewModel, ImageViewModel imageViewModel, ErrorViewModel errorViewModel)
+    public ImageRetrievalThread(Activity uiActivity, SearchResponseViewModel viewModel, List<ImageViewModel> imageViewModels, ErrorViewModel errorViewModel)
     {
         remoteUtilities = RemoteUtilities.getInstance(uiActivity);
         this.sViewModel = viewModel;
-        this.imageViewModel = imageViewModel;
+        this.imageViewModels = imageViewModels;
         this.errorViewModel = errorViewModel;
         this.uiActivity=uiActivity;
     }
 
-    public void run(){
-        String endpoint = getEndpoint(sViewModel.getResponse());
+    public void run()
+    {
+        // gets the list of urls for images related to the sViewModel.getResponse()
+        List<String> endpoints = getEndpoints(sViewModel.getResponse());
 
-        if(endpoint==null)
+        // If there are no results
+        if(endpoints == null || endpoints.size() == 0)
         {
             uiActivity.runOnUiThread(new Runnable()
             {
                 @Override
                 public void run()
                 {
-                    Toast.makeText(uiActivity,"No image found",Toast.LENGTH_LONG).show();
-                    errorViewModel.setErrorCode(errorViewModel.getErrorCode()+1);
+                    Toast.makeText(uiActivity,"No images found",Toast.LENGTH_LONG).show();
+                    errorViewModel.setErrorCode(errorViewModel.getErrorCode() + 1);
                 }
             });
         }
-        else {
-            Bitmap image = getImageFromUrl(endpoint);
+        else
+        {
+            // Iterate through as many results there are.
+            for(int i = 0; i < endpoints.size(); i++)
+            {
+                Bitmap image = getImageFromUrl(endpoints.get(i));
 
-            try
-            {
-                Thread.sleep(3000);
+                try
+                {
+                    Thread.sleep(1000);
+                }
+                catch (Exception e) {}
+
+                Log.d("ID", "" + image);
+
+                imageViewModels.get(i).setImage(image);
             }
-            catch (Exception e)
-            {
-            }
-            imageViewModel.setImage(image);
         }
     }
 
-    private String getEndpoint(String data)
+    private List<String> getEndpoints(String data)
     {
-        String imageUrl = null;
+        List<String> imageUrls = new ArrayList<>();
         try
         {
             JSONObject jBase = new JSONObject(data);
             JSONArray jHits = jBase.getJSONArray("hits");
 
-            if(jHits.length()>0)
+            if(jHits.length() > 0)
             {
-                JSONObject jHitsItem = jHits.getJSONObject(0);
-                imageUrl = jHitsItem.getString("largeImageURL");
+                // Ternary operators cause I'm cool
+                int length = jHits.length() > 15 ? 15 : jHits.length();
+                numHits = length;
+
+                for(int i = 0; i < length; i++)
+                {
+                    JSONObject jHitsItem = jHits.getJSONObject(i);
+                    imageUrls.add(jHitsItem.getString("largeImageURL"));
+                }
             }
         }
         catch (JSONException e)
         {
             e.printStackTrace();
         }
-        return imageUrl;
+        return imageUrls;
     }
 
     // This method retrieves the image from the URL

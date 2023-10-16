@@ -34,7 +34,7 @@ public class APISearchThread extends Thread
         String endpoint = getSearchEndpoint();
         HttpURLConnection connection = remoteUtilities.openConnection(endpoint);
 
-        if(connection == null)
+        if(connection != null)
         {
             if(remoteUtilities.connectionStatus(connection))
             {
@@ -55,7 +55,7 @@ public class APISearchThread extends Thread
     private String getSearchEndpoint()
     {
         Uri.Builder url = Uri.parse(this.baseUrl).buildUpon();
-        url.appendQueryParameter("key","23319229-94b52a4727158e1dc3fd5f2db");
+        url.appendQueryParameter("key","40073976-7775ce40c284f984ed3b47131");
         url.appendQueryParameter("q",this.searchKey);
         String urlString = url.build().toString();
         return urlString;

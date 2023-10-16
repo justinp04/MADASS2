@@ -10,6 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import org.apache.commons.io.IOUtils;
 
 // The purpose of this file is to store the common methods that are used for API calls.
 // Follows a singleton approach
@@ -48,6 +49,7 @@ public class RemoteUtilities
         try
         {
             URL url = new URL(urlString);
+            conn = (HttpURLConnection) url.openConnection();
         }
         catch(MalformedURLException e)
         {
