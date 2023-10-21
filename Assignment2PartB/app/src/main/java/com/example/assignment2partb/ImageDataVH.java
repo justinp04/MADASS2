@@ -11,12 +11,13 @@ public class ImageDataVH extends RecyclerView.ViewHolder
 {
     //public ImageView image;
     public TextView label;
+    public ImageView image;
 
     public ImageDataVH(@NonNull View itemView)
     {
         super(itemView);
 
-        //image = itemView.findViewById(R.id.image);
+        image = itemView.findViewById(R.id.image);
         label = itemView.findViewById(R.id.label);
     }
 }

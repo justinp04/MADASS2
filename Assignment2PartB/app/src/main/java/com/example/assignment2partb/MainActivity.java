@@ -1,6 +1,8 @@
 package com.example.assignment2partb;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -8,24 +10,37 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
 {
-    ArrayList<String> data;
+    ArrayList<Bitmap> images;
+    SearchResponseViewModel sViewModel;
+    ImageViewModel imageViewModel;
+    List<ImageViewModel> imageViewModels;
+    ErrorViewModel errorViewModel;
+    Button searchButton;
+    RecyclerView picture;
+    ProgressBar progressBar;
+    EditText searchBar;
+    int numHits;
+
 
     public MainActivity()
     {
-        data = new ArrayList<>();
-
-        for(int i = 0; i < 5; i++)
-        {
-            data.add("Hello");
-        }
+        images = new ArrayList<>();
     }
 
     @Override
@@ -34,12 +49,99 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        int span = 1;
-        RecyclerView rv= findViewById(R.id.imageList);
-        rv.setLayoutManager(new GridLayoutManager(this, span));
-        ImageDataAdapter adapter = new ImageDataAdapter(data);
+        // Initialize the view models
+        sViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory) new ViewModelProvider.NewInstanceFactory()).get(SearchResponseViewModel.class);
 
-        rv.setAdapter(adapter);
+        imageViewModels = new ArrayList<>();
+        for(int i = 0; i < 15; i++)
+        {
+            // We retrieve a max of 15 images
+            imageViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory) new ViewModelProvider.NewInstanceFactory()).get(ImageViewModel.class);
+            imageViewModels.add(imageViewModel);
+        }
+
+        errorViewModel = new ViewModelProvider(this, (ViewModelProvider.Factory) new ViewModelProvider.NewInstanceFactory()).get(ErrorViewModel.class);
+
+        searchButton = findViewById(R.id.search);
+        searchBar = findViewById(R.id.search_bar);
+        progressBar = findViewById(R.id.progressBarId);
+
+        int span = 2;
+        picture = findViewById(R.id.imageList);
+        picture.setLayoutManager(new GridLayoutManager(this, span));
+        ImageDataAdapter adapter = new ImageDataAdapter(images);
+
+        picture.setAdapter(adapter);
+
+        picture.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+
+        // Button to search for the image
+        searchButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                // This should reset the list of images.
+                images = new ArrayList<>();
+
+                picture.setVisibility(View.INVISIBLE);
+                String searchValues = searchBar.getText().toString();
+
+                // Create the search thread to search for the image
+                APISearchThread searchThread = new APISearchThread(searchValues,MainActivity.this,sViewModel);
+                progressBar.setVisibility(View.VISIBLE);
+                searchThread.start();
+            }
+        });
+
+        // Observer to start when the search is finished
+        sViewModel.response.observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                progressBar.setVisibility(View.INVISIBLE);
+                Toast.makeText(MainActivity.this, "Search Complete",Toast.LENGTH_LONG).show();
+
+                // Start at thread to retrieve the image.
+                // This will store the information in the image view model and the error view model
+                ImageRetrievalThread imageRetrievalThread = new ImageRetrievalThread(MainActivity.this, sViewModel, imageViewModels, errorViewModel);
+                numHits = imageRetrievalThread.numHits == 0 ? 0 : imageRetrievalThread.numHits - 1;
+
+                progressBar.setVisibility(View.VISIBLE);
+                imageRetrievalThread.start();
+            }
+        });
+
+        // Observer to start when an image is retrieved.
+        imageViewModels.get(numHits).image.observe(this, new Observer<Bitmap>()
+        {
+            @Override
+            public void onChanged(Bitmap bitmap)
+            {
+                Log.d("OBSERVER","CALLED");
+
+                progressBar.setVisibility(View.INVISIBLE);
+                picture.setVisibility(View.VISIBLE);
+
+                // Adding to the list of images
+                Log.d("Image Bitmap", "" + imageViewModel.getImage());
+                images.add(imageViewModels.get(numHits).getImage());
+
+                Log.d("Image from list", "" + images.get(images.size() == 0 ? 0 : images.size() - 1));
+
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        // An observer for the error view model as well if an error occurs
+        errorViewModel.errorCode.observe(this, new Observer<Integer>()
+        {
+            @Override
+            public void onChanged(Integer integer)
+            {
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 
     public byte[] toByteArray(Bitmap image)

@@ -11,3 +11,8 @@ This contacts application allows for:
   - Contact photo
 - Importing contacts from the existing contacts app on the android device
 
+
+Containg all of our docs and source code for our final solution
+
+Assignment Two for GitHub includes constructing a a 
+
