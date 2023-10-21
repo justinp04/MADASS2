@@ -1,4 +1,4 @@
-package com.example.recycleviewdemo;
+package com.example.assignment2parta;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -25,8 +25,8 @@ public interface ContactDAO {
     @Query("SELECT * FROM contacts")
     List<Contact> getAllContacts();
 
-    @Query("SELECT * FROM contacts WHERE phoneNumber = :number")
-    Contact getContactByNumber(int number);
+    @Query("SELECT * FROM contacts WHERE phoneNumber LIKE '%' || :number || '%'")
+    Contact getContactByNumber(String number);
 
     // When using LIKE with a paramterized query, need to concatenate it into a string hence the following
     @Query("SELECT * FROM contacts WHERE contact_name LIKE '%' || :searchName || '%'")

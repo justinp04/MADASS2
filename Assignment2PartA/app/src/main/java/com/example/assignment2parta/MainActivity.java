@@ -1,4 +1,4 @@
-package com.example.recycleviewdemo;
+package com.example.assignment2parta;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -28,7 +28,10 @@ public class MainActivity extends AppCompatActivity
         // Retrieve the DAO for ContactDAO
         ContactDAO contactDAO = ContactDBInstance.getDatabase(getApplicationContext()).contactDAO();
 
+        contactListFragment.setCard(contactCardFragment);
         Fragment contactList = loadContactListFragment();
+
+
 
         // MAke a new view model provider to track information between views
         MainActivityData mainActivityData = new ViewModelProvider(this).get(MainActivityData.class);
