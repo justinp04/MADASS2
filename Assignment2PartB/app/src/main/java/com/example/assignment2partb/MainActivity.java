@@ -20,6 +20,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +39,9 @@ public class MainActivity extends AppCompatActivity
     ProgressBar progressBar;
     EditText searchBar;
     int numHits;
+
+    FirebaseStorage storage;
+    StorageReference storageReference;
 
 
     public MainActivity()
@@ -65,6 +71,9 @@ public class MainActivity extends AppCompatActivity
         searchButton = findViewById(R.id.search);
         searchBar = findViewById(R.id.search_bar);
         progressBar = findViewById(R.id.progressBarId);
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
 
         int span = 2;
         picture = findViewById(R.id.imageList);

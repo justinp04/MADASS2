@@ -15,10 +15,12 @@ public class ImageDataAdapter extends RecyclerView.Adapter<ImageDataVH>
 {
     // Make reference to the list of data that we will be binding to VH in this adapter
     ArrayList<Bitmap> data;
+    OnAdapterClick listener;
 
-    public ImageDataAdapter(ArrayList<Bitmap> data)
+    public ImageDataAdapter(ArrayList<Bitmap> data, OnAdapterClick listener)
     {
         this.data = data;
+        this.listener = listener;
     }
 
     @NonNull
@@ -47,7 +49,7 @@ public class ImageDataAdapter extends RecyclerView.Adapter<ImageDataVH>
             @Override
             public void onClick(View view)
             {
-                // Send to firebase
+
             }
         });
     }
