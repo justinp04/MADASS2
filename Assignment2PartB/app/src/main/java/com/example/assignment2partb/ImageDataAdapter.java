@@ -2,6 +2,7 @@ package com.example.assignment2partb;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,9 @@ import java.util.ArrayList;
 public class ImageDataAdapter extends RecyclerView.Adapter<ImageDataVH>
 {
     // Make reference to the list of data that we will be binding to VH in this adapter
-    ArrayList<String> data;
+    ArrayList<Bitmap> data;
 
-    public ImageDataAdapter(ArrayList<String> data)
+    public ImageDataAdapter(ArrayList<Bitmap> data)
     {
         this.data = data;
     }
@@ -39,17 +40,19 @@ public class ImageDataAdapter extends RecyclerView.Adapter<ImageDataVH>
     public void onBindViewHolder(@NonNull ImageDataVH holder, int position)
     {
         // Bind the data to the VH
-        //holder.image.setImageBitmap(toBitmap(data.get(position)));
         holder.label.setText("" + position);
+        holder.image.setImageBitmap(data.get(position));
 
-//        holder.image.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View view)
-//            {
-//                // Change image?
-//            }
-//        });
+        Log.d("Image","" + data.get(position));
+
+        holder.image.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                // Send to firebase
+            }
+        });
     }
 
     @Override

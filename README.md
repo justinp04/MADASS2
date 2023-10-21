@@ -10,4 +10,3 @@ This contacts application allows for:
   - Phone number
   - Contact photo
 - Importing contacts from the existing contacts app on the android device
-
