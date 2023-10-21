@@ -2,6 +2,7 @@ package com.example.assignment2partb;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,8 @@ public class ImageDataAdapter extends RecyclerView.Adapter<ImageDataVH>
         // Bind the data to the VH
         holder.label.setText("" + position);
         holder.image.setImageBitmap(data.get(position));
+
+        Log.d("Image","" + data.get(position));
 
         holder.image.setOnClickListener(new View.OnClickListener()
         {
