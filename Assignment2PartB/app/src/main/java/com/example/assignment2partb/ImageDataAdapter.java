@@ -52,7 +52,7 @@ public class ImageDataAdapter extends RecyclerView.Adapter<ImageDataVH>
             @Override
             public void onClick(View view)
             {
-
+                listener.onAdapterClick(""+position,data.get(position));
             }
         });
     }

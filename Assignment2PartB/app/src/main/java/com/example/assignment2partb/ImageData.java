@@ -24,4 +24,13 @@ public class ImageData
     {
         this.photo = photo;
     }
+
+    public Bitmap getPhoto() {
+        return photo;
+    }
+
+    public String getLabelString()
+    {
+        return label.toString();
+    }
 }

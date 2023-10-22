@@ -1,5 +1,6 @@
 package com.example.assignment2partb;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -12,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,14 +22,17 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity implements OnAdapterClick
 {
     ArrayList<Bitmap> images;
     SearchResponseViewModel sViewModel;
@@ -39,6 +44,8 @@ public class MainActivity extends AppCompatActivity
     ProgressBar progressBar;
     EditText searchBar;
     int numHits;
+
+    String currSearch;
 
     FirebaseStorage storage;
     StorageReference storageReference;
@@ -73,12 +80,12 @@ public class MainActivity extends AppCompatActivity
         progressBar = findViewById(R.id.progressBarId);
 
         storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
+        storageReference = storage.getReferenceFromUrl("gs://assignment2partb-5edd9.appspot.com");
 
         int span = 2;
         picture = findViewById(R.id.imageList);
         picture.setLayoutManager(new GridLayoutManager(this, span));
-        ImageDataAdapter adapter = new ImageDataAdapter(images);
+        ImageDataAdapter adapter = new ImageDataAdapter(images, this);
 
         picture.setAdapter(adapter);
 
@@ -95,7 +102,9 @@ public class MainActivity extends AppCompatActivity
                 images.clear();
 
                 picture.setVisibility(View.INVISIBLE);
-                String searchValues = searchBar.getText().toString();
+                currSearch = searchBar.getText().toString();
+                String searchValues = currSearch;
+
 
                 // Create the search thread to search for the image
                 APISearchThread searchThread = new APISearchThread(searchValues,MainActivity.this,sViewModel);
@@ -166,5 +175,30 @@ public class MainActivity extends AppCompatActivity
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
+    }
+
+    //Listener code to take the bitmap selected and upload it to firebase
+    //Adapted from :https://firebase.google.com/docs/storage/android/upload-files#upload_from_data_in_memory
+    @Override
+    public void onAdapterClick(String label, Bitmap bitmap) {
+        StorageReference imageRef = storageReference.child("images/"+currSearch+ label);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
+        byte[] bytes = baos.toByteArray();
+
+        UploadTask uploadTask = imageRef.putBytes(bytes);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("Upload Failed", e.toString());
+                Toast.makeText(MainActivity.this, "Failed to upload image.",Toast.LENGTH_LONG).show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d("Upload success!", "Upload success");
+                Toast.makeText(MainActivity.this, "Upload successful.",Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
