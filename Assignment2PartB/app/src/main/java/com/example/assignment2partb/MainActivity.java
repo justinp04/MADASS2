@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements OnAdapterClick
             }
         });
 
+        //if the column switch is changed, this will update the spancount of the gridlayoutmanager.
         colSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked)
             {
@@ -198,11 +199,15 @@ public class MainActivity extends AppCompatActivity implements OnAdapterClick
     //Adapted from :https://firebase.google.com/docs/storage/android/upload-files#upload_from_data_in_memory
     @Override
     public void onAdapterClick(String label, Bitmap bitmap) {
+        //set storage location in firebase
         StorageReference imageRef = storageReference.child("images/"+currSearch+ label);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        //compress bitmap into output stream
         bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
+        //turn stream in byte array
         byte[] bytes = baos.toByteArray();
 
+        //begin uploading byte array to firebase
         UploadTask uploadTask = imageRef.putBytes(bytes);
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
