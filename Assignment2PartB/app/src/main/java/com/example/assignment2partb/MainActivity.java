@@ -82,8 +82,8 @@ public class MainActivity extends AppCompatActivity
 
         picture.setAdapter(adapter);
 
-        picture.setVisibility(View.INVISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
+        picture.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
 
         // Button to search for the image
         searchButton.setOnClickListener(new View.OnClickListener()
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view)
             {
                 // This should reset the list of images.
-                images = new ArrayList<>();
+                images.clear();
 
                 picture.setVisibility(View.INVISIBLE);
                 String searchValues = searchBar.getText().toString();
@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onChanged(String s) {
                 progressBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(MainActivity.this, "Search Complete",Toast.LENGTH_LONG).show();
 
                 // Start at thread to retrieve the image.
                 // This will store the information in the image view model and the error view model
@@ -117,6 +116,7 @@ public class MainActivity extends AppCompatActivity
                 numHits = imageRetrievalThread.numHits == 0 ? 0 : imageRetrievalThread.numHits - 1;
 
                 progressBar.setVisibility(View.VISIBLE);
+                Toast.makeText(MainActivity.this, "Search Complete",Toast.LENGTH_LONG).show();
                 imageRetrievalThread.start();
             }
         });
@@ -132,13 +132,21 @@ public class MainActivity extends AppCompatActivity
                 progressBar.setVisibility(View.INVISIBLE);
                 picture.setVisibility(View.VISIBLE);
 
-                // Adding to the list of images
-                Log.d("Image Bitmap", "" + imageViewModel.getImage());
-                images.add(imageViewModels.get(numHits).getImage());
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        // Adding to the list of images
+                        Log.d("Image Bitmap", "" + imageViewModel.getImage());
+                        images.add(bitmap);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
 
-                Log.d("Image from list", "" + images.get(images.size() == 0 ? 0 : images.size() - 1));
-
-                adapter.notifyDataSetChanged();
+                // Log.d("Image from list", "" + images.get(images.size() == 0 ? 0 : images.size() - 1));
+                // adapter.notifyDataSetChanged();
+                // Log.d("Image from list", "" + images.get(images.size() == 0 ? 0 : images.size() - 1));
             }
         });
 
