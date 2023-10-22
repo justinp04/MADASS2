@@ -17,6 +17,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -39,13 +40,17 @@ public class MainActivity extends AppCompatActivity implements OnAdapterClick
     ImageViewModel imageViewModel;
     List<ImageViewModel> imageViewModels;
     ErrorViewModel errorViewModel;
+    CompoundButton colSwitch;
+
     Button searchButton;
     RecyclerView picture;
     ProgressBar progressBar;
     EditText searchBar;
     int numHits;
 
+
     String currSearch;
+    int colNum;
 
     FirebaseStorage storage;
     StorageReference storageReference;
@@ -78,13 +83,15 @@ public class MainActivity extends AppCompatActivity implements OnAdapterClick
         searchButton = findViewById(R.id.search);
         searchBar = findViewById(R.id.search_bar);
         progressBar = findViewById(R.id.progressBarId);
+        colSwitch = findViewById(R.id.columnSwitch);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReferenceFromUrl("gs://assignment2partb-5edd9.appspot.com");
 
-        int span = 2;
+        colNum = 1;
+        GridLayoutManager glm = new GridLayoutManager(this, colNum);
         picture = findViewById(R.id.imageList);
-        picture.setLayoutManager(new GridLayoutManager(this, span));
+        picture.setLayoutManager(glm);
         ImageDataAdapter adapter = new ImageDataAdapter(images, this);
 
         picture.setAdapter(adapter);
@@ -127,6 +134,16 @@ public class MainActivity extends AppCompatActivity implements OnAdapterClick
                 progressBar.setVisibility(View.VISIBLE);
                 Toast.makeText(MainActivity.this, "Search Complete",Toast.LENGTH_LONG).show();
                 imageRetrievalThread.start();
+            }
+        });
+
+        colSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked)
+            {
+                glm.setSpanCount(2);
+            }
+            else {
+                glm.setSpanCount(1);
             }
         });
 
